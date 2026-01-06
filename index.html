@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تولید متن برای محصول</title>
+    <title>تولید متن رنگ، سن و ابعاد محصول</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Tahoma', Arial, sans-serif;
@@ -27,7 +25,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 600px; /* کمی بزرگ‌تر برای چندین محصول */
+            max-width: 650px;
             margin: 20px auto;
         }
 
@@ -41,8 +39,8 @@
         .product {
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 18px;
+            margin-bottom: 18px;
             background-color: #f9f9f9;
         }
 
@@ -50,12 +48,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .product-header h3 {
             margin: 0;
             color: #555;
+            font-weight: bold;
         }
 
         .remove-btn {
@@ -68,9 +67,7 @@
             font-size: 0.9rem;
         }
 
-        .remove-btn:hover {
-            background-color: #d32f2f;
-        }
+        .remove-btn:hover { background-color: #d32f2f; }
 
         label {
             display: block;
@@ -86,7 +83,6 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
         }
 
         input:focus {
@@ -95,175 +91,176 @@
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
 
-        #addProductBtn {
-            width: 100%;
-            padding: 12px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+        .dimensions-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        #addProductBtn:hover {
-            background-color: #1E88E5;
+        .dimensions-row > div {
+            flex: 1;
         }
 
-        button[type="submit"] {
+        @media (max-width: 480px) {
+            .dimensions-row { flex-direction: column; gap: 0; }
+        }
+
+        #addProductBtn, button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background-color: #4CAF50;
-            color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
-            transition: background-color 0.3s;
+            margin-bottom: 16px;
         }
 
-        button[type="submit"]:hover {
-            background-color: #45a049;
+        #addProductBtn {
+            background-color: #2196F3;
+            color: white;
         }
+
+        #addProductBtn:hover { background-color: #1E88E5; }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button[type="submit"]:hover { background-color: #45a049; }
 
         #output {
             margin-top: 24px;
-            padding: 16px;
+            padding: 20px;
             background-color: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            border: 2px dashed #ccc;
             white-space: pre-wrap;
-            font-size: 1rem;
-            line-height: 1.8;
+            font-size: 1.05rem;
+            line-height: 2.2;
             direction: rtl;
             text-align: right;
+            min-height: 120px;
+            font-family: 'Tahoma', sans-serif;
         }
 
-        /* ریسپانسیو برای صفحه‌های کوچک */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 16px;
-                margin: 10px auto;
-            }
-
-            h1 {
-                font-size: 1.3rem;
-            }
-
-            input, button {
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            #output {
-                font-size: 0.95rem;
-                padding: 12px;
-            }
+        .copy-btn {
+            margin-top: 12px;
+            padding: 12px 20px;
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
         }
+
+        .copy-btn:hover { background-color: #e68900; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- <h1>تولید متن تکراری برای چندین محصول</h1> -->
+        <h1>تولید متن رنگ، سن و ابعاد محصول</h1>
         
         <form id="inputForm">
-            <div id="productsContainer">
-                <!-- محصولات دینامیک اینجا اضافه می‌شوند -->
-            </div>
+            <div id="productsContainer"></div>
             
-            <button type="button" id="addProductBtn">اضافه کردن محصول جدید</button>
+            <button type="button" id="addProductBtn">+ اضافه کردن رنگ و سن جدید</button>
             
-            <button type="submit">تولید متن برای محصولات</button>
+            <button type="submit">تولید متن نهایی</button>
         </form>
 
         <div id="output"></div>
+        <button type="button" class="copy-btn" id="copyBtn" style="display:none;">کپی کردن متن</button>
     </div>
 
     <script>
-        const form = document.getElementById('inputForm');
         const productsContainer = document.getElementById('productsContainer');
         const output = document.getElementById('output');
+        const copyBtn = document.getElementById('copyBtn');
         const addProductBtn = document.getElementById('addProductBtn');
-
+        
         let productCount = 0;
 
-        // تابع برای اضافه کردن یک محصول جدید
         function addProduct() {
             productCount++;
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('product');
-            productDiv.id = `product-${productCount}`;
-
-            productDiv.innerHTML = `
+            const div = document.createElement('div');
+            div.className = 'product';
+            div.id = `product-${productCount}`;
+            
+            div.innerHTML = `
                 <div class="product-header">
-                    <h3>سایز ${productCount}</h3>
+                    <h3>رنگ و سن ${productCount}</h3>
                     <button type="button" class="remove-btn" onclick="removeProduct(${productCount})">حذف</button>
                 </div>
-                <label for="size-${productCount}">سایز (مثل S، M، L، XL):</label>
-                <input type="text" id="size-${productCount}" placeholder="مثال: Medium یا L" required>
 
-                <label for="width-${productCount}">عرض (سانتی‌متر):</label>
-                <input type="number" id="width-${productCount}" placeholder="مثال: 50" required>
+                <label>نام رنگ:</label>
+                <input type="text" placeholder="مثال: آبی, مشکی, صورتی" required>
 
-                <label for="length-${productCount}">طول (سانتی‌متر):</label>
-                <input type="number" id="length-${productCount}" placeholder="مثال: 100" required>
+                <label>سن یا سایز:</label>
+                <input type="text" placeholder="مثال: ۲ سال, ۳-۴ سال, ۶ ماه" required>
+
+                <div class="dimensions-row">
+                    <div>
+                        <label>عرض (سانتی‌متر):</label>
+                        <input type="number" placeholder="مثال: ۷۰" required>
+                    </div>
+                    <div>
+                        <label>طول (سانتی‌متر):</label>
+                        <input type="number" placeholder="مثال: ۱۴۰" required>
+                    </div>
+                </div>
             `;
-
-            productsContainer.appendChild(productDiv);
+            productsContainer.appendChild(div);
         }
 
-        // تابع برای حذف محصول
         function removeProduct(id) {
-            const productDiv = document.getElementById(`product-${id}`);
-            if (productDiv) {
-                productDiv.remove();
-            }
+            document.getElementById(`product-${id}`)?.remove();
         }
 
-        // اضافه کردن اولین محصول به طور پیش‌فرض
         addProduct();
 
-        // رویداد برای دکمه اضافه کردن محصول
         addProductBtn.addEventListener('click', addProduct);
 
-        // رویداد برای فرم
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
+        document.getElementById('inputForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-            const products = [];
-            for (let i = 1; i <= productCount; i++) {
-                const sizeInput = document.getElementById(`size-${i}`);
-                const widthInput = document.getElementById(`width-${i}`);
-                const lengthInput = document.getElementById(`length-${i}`);
+            let text = '';
+            const products = document.querySelectorAll('.product');
 
-                // اگر محصول حذف نشده باشد
-                if (sizeInput && widthInput && lengthInput) {
-                    const size = sizeInput.value.trim();
-                    const width = widthInput.value;
-                    const length = lengthInput.value;
+            products.forEach((product) => {
+                const inputs = product.querySelectorAll('input');
+                const color = inputs[0].value.trim();
+                const age = inputs[1].value.trim();
+                const width = inputs[2].value;
+                const length = inputs[3].value;
 
-                    if (size && width && length) {
-                        products.push({ size, width, length });
-                    }
+                if (color && age && width && length) {
+                    text += `رنگ: ${color}\n`;
+                    text += `سن: ${age} سال\n`;
+                    text += `ابعاد تقریبی:\n`;
+                    text += `- عرض: ${width} سانتی‌متر\n`;
+                    text += `- طول: ${length} سانتی‌متر\n\n`;
+                    text += `──────────────────\n\n`;
                 }
-            }
-
-            // تولید متن خروجی برای همه محصولات
-            let text = 'متن نهایی\n';
-            products.forEach((product, index) => {
-                text += `سایز: ${product.size}\n`;
-                text += `عرض: ${product.width} سانتی‌متر\n`;
-                text += `طول: ${product.length} سانتی‌متر\n\n`;
-                text += '-------------------------\n\n';
             });
 
-            output.textContent = text;
+            // جمله پایانی بدون ایموجی
+            if (text) {
+                text += `لطفاً رنگ و سایز مورد نظر خود را اعلام کنید تا موجودی را بررسی کنیم.`;
+                output.textContent = text.trim();
+                copyBtn.style.display = 'block';
+            } else {
+                output.textContent = 'هیچ داده‌ای وارد نشده!';
+                copyBtn.style.display = 'none';
+            }
+        });
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(output.textContent);
+            copyBtn.textContent = 'کپی شد!';
+            setTimeout(() => copyBtn.textContent = 'کپی کردن متن', 2000);
         });
     </script>
 </body>
