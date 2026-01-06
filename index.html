@@ -1,202 +1,313 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تولید متن رنگ، سن و ابعاد محصول</title>
     <style>
-        * {
-            box-sizing: border-box;
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --success-dark: #059669;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray: #f3f4f6;
+            --text: #1f2937;
+            --border: #e5e7eb;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Tahoma', Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Vazir', 'Tahoma', Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            padding: 20px;
             direction: rtl;
+            color: var(--text);
         }
 
         .container {
-            background-color: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 650px;
-            margin: 20px auto;
+            background: white;
+            max-width: 700px;
+            margin: 30px auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
         }
 
-        h1 {
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
             text-align: center;
-            color: #333;
-            font-size: 1.5rem;
-            margin-bottom: 24px;
+            padding: 30px 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 30px;
         }
 
         .product {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 18px;
-            margin-bottom: 18px;
-            background-color: #f9f9f9;
+            background: #fafafa;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
         .product-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .product-header h3 {
-            margin: 0;
-            color: #555;
-            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 700;
         }
 
         .remove-btn {
-            background-color: #f44336;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 8px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255,107,107,0.3);
         }
 
         .remove-btn:hover {
-            background-color: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255,107,107,0.4);
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #444;
-            font-weight: bold;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #374151;
         }
 
-        input {
+        input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
         }
 
         input:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            transform: scale(1.02);
         }
 
         .dimensions-row {
             display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        .dimensions-row>div {
+        .dimensions-row > div { flex: 1; }
+
+        .age-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .age-input { flex: 1; }
+
+        .age-toggle {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .age-toggle input[type="radio"] { display: none; }
+
+        .age-toggle label {
             flex: 1;
+            padding: 14px 24px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        @media (max-width: 480px) {
-            .dimensions-row {
-                flex-direction: column;
-                gap: 0;
-            }
+        .age-toggle label::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3));
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        #addProductBtn,
-        button[type="submit"] {
+        /* ماه */
+        .age-toggle input[id^="month"]:checked + label {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            color: white;
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* سال */
+        .age-toggle input[id^="year"]:checked + label {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .age-toggle label:hover:not(:has(+ input:checked)) {
+            background: #e2e8f0;
+        }
+
+        #addProductBtn, button[type="submit"] {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 14px;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 16px;
+            transition: all 0.4s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
         #addProductBtn {
-            background-color: #2196F3;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
         }
 
         #addProductBtn:hover {
-            background-color: #1E88E5;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.3);
         }
 
         button[type="submit"] {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
             color: white;
         }
 
         button[type="submit"]:hover {
-            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.3);
         }
 
         #output {
-            margin-top: 24px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 12px;
-            border: 2px dashed #ccc;
-            white-space: pre-wrap;
+            margin-top: 30px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 16px;
+            border: 2px dashed #cbd5e1;
+            min-height: 140px;
             font-size: 1.05rem;
-            line-height: 2.2;
-            direction: rtl;
+            line-height: 2.4;
             text-align: right;
-            min-height: 120px;
-            font-family: 'Tahoma', sans-serif;
+            white-space: pre-wrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .copy-btn, .reset-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
         .copy-btn {
-            margin-top: 12px;
-            padding: 12px 20px;
-            background-color: #FF9800;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
         }
 
         .copy-btn:hover {
-            background-color: #e68900;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #ff6b6b, #f44336);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .dimensions-row, .age-group { flex-direction: column; }
+            .action-buttons { flex-direction: column; }
+            header { font-size: 1.4rem; padding: 24px 16px; }
+            .content { padding: 20px; }
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.0.0/dist/font-face.css" rel="stylesheet" type="text/css" />
 </head>
-
 <body>
     <div class="container">
-        <h1>تولید متن رنگ، سن و ابعاد محصول</h1>
+        <header>تولید متن رنگ، سن و ابعاد محصول</header>
+        
+        <div class="content">
+            <form id="inputForm">
+                <div id="productsContainer"></div>
+                
+                <button type="button" id="addProductBtn">+ اضافه کردن رنگ و سن جدید</button>
+                
+                <button type="submit">تولید متن نهایی</button>
+            </form>
 
-        <form id="inputForm">
-            <div id="productsContainer"></div>
-
-            <button type="button" id="addProductBtn">+ اضافه کردن رنگ و سن جدید</button>
-
-            <button type="submit">تولید متن نهایی</button>
-        </form>
-
-        <div id="output"></div>
-        <button type="button" class="copy-btn" id="copyBtn" style="display:none;">کپی کردن متن</button>
+            <div id="output"></div>
+            
+            <div class="action-buttons" id="actionButtons" style="display:none;">
+                <button type="button" class="copy-btn" id="copyBtn">کپی کردن متن</button>
+                <button type="button" class="reset-btn" id="resetBtn">شروع دوباره</button>
+            </div>
+        </div>
     </div>
 
     <script>
         const productsContainer = document.getElementById('productsContainer');
         const output = document.getElementById('output');
+        const actionButtons = document.getElementById('actionButtons');
         const copyBtn = document.getElementById('copyBtn');
+        const resetBtn = document.getElementById('resetBtn');
         const addProductBtn = document.getElementById('addProductBtn');
-
+        
         let productCount = 0;
 
         function addProduct() {
@@ -204,7 +315,7 @@
             const div = document.createElement('div');
             div.className = 'product';
             div.id = `product-${productCount}`;
-
+            
             div.innerHTML = `
                 <div class="product-header">
                     <h3>رنگ و سن ${productCount}</h3>
@@ -212,72 +323,115 @@
                 </div>
 
                 <label>نام رنگ:</label>
-                <input type="text" placeholder="مثال: آبی, مشکی, صورتی" required>
+                <input type="text" placeholder="مثال: آبی آسمانی، مشکی مات، صورتی پاستلی">
 
-                <label>سن یا سایز:</label>
-                <input type="text" placeholder="مثال: ۲ سال, ۳-۴ سال, ۶ ماه" required>
+                <label>سن:</label>
+                <div class="age-group">
+                    <input type="text" class="age-input" placeholder="عدد سن (مثال: ۳)" inputmode="numeric"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    <div class="age-toggle">
+                        <input type="radio" id="month-${productCount}" name="age-unit-${productCount}" value="ماه" checked>
+                        <label for="month-${productCount}">ماه</label>
+                        
+                        <input type="radio" id="year-${productCount}" name="age-unit-${productCount}" value="سال">
+                        <label for="year-${productCount}">سال</label>
+                    </div>
+                </div>
 
                 <div class="dimensions-row">
                     <div>
                         <label>عرض (سانتی‌متر):</label>
-                        <input type="number" placeholder="مثال: ۷۰" required>
+                        <input type="number" placeholder="مثال: ۷۰">
                     </div>
                     <div>
                         <label>طول (سانتی‌متر):</label>
-                        <input type="number" placeholder="مثال: ۱۴۰" required>
+                        <input type="number" placeholder="مثال: ۱۴۰">
                     </div>
                 </div>
             `;
+
             productsContainer.appendChild(div);
+
+            const ageInput = div.querySelector('.age-input');
+            const monthRadio = div.querySelector(`#month-${productCount}`);
+            const yearRadio = div.querySelector(`#year-${productCount}`);
+
+            function updateAgeDisplay() {
+                const num = ageInput.value.trim();
+                if (num === '') {
+                    ageInput.dataset.full = '';
+                    return;
+                }
+                const unit = monthRadio.checked ? 'ماه' : 'سال';
+                ageInput.dataset.full = `${num} ${unit}`;
+            }
+
+            ageInput.addEventListener('input', updateAgeDisplay);
+            monthRadio.addEventListener('change', updateAgeDisplay);
+            yearRadio.addEventListener('change', updateAgeDisplay);
+
+            updateAgeDisplay();
         }
 
         function removeProduct(id) {
             document.getElementById(`product-${id}`)?.remove();
         }
 
-        addProduct();
+        resetBtn.addEventListener('click', () => {
+            if (confirm('مطمئنید که می‌خواهید همه چیز را پاک کنید؟')) {
+                productsContainer.innerHTML = '';
+                productCount = 0;
+                addProduct();
+                output.textContent = '';
+                actionButtons.style.display = 'none';
+            }
+        });
 
         addProductBtn.addEventListener('click', addProduct);
+        addProduct(); // اولین محصول
 
-        document.getElementById('inputForm').addEventListener('submit', function (e) {
+        document.getElementById('inputForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             let text = '';
             const products = document.querySelectorAll('.product');
 
             products.forEach((product) => {
-                const inputs = product.querySelectorAll('input');
-                const color = inputs[0].value.trim();
-                const age = inputs[1].value.trim();
-                const width = inputs[2].value;
-                const length = inputs[3].value;
+                const colorInput = product.querySelector('input[type="text"]');
+                const ageInput = product.querySelector('.age-input');
+                const widthInput = product.querySelectorAll('input[type="number"]')[0];
+                const lengthInput = product.querySelectorAll('input[type="number"]')[1];
 
-                if (color && age && width && length) {
+                const color = colorInput.value.trim();
+                const ageFull = ageInput.dataset.full || '';
+                const width = widthInput.value;
+                const length = lengthInput.value;
+
+                if (color && ageFull && width && length) {
                     text += `رنگ: ${color}\n`;
-                    text += `سن: ${age} سال\n`;
+                    text += `سایز: ${ageFull}\n\n`;
                     text += `ابعاد تقریبی:\n`;
                     text += `- عرض: ${width} سانتی‌متر\n`;
                     text += `- طول: ${length} سانتی‌متر\n\n`;
-                    text += `──────────────────\n\n`;
+                    text += `━━━━━━━━━━━━━━━━━━\n\n`;
                 }
             });
 
-            // جمله پایانی بدون ایموجی
-            if (text) {
+            if (text.trim()) {
                 output.textContent = text.trim();
-                copyBtn.style.display = 'block';
+                actionButtons.style.display = 'flex';
             } else {
-                output.textContent = 'هیچ داده‌ای وارد نشده!';
-                copyBtn.style.display = 'none';
+                output.textContent = 'لطفاً اطلاعات کامل یک محصول را وارد کنید.';
+                actionButtons.style.display = 'none';
             }
         });
 
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(output.textContent);
+            const original = copyBtn.textContent;
             copyBtn.textContent = 'کپی شد!';
-            setTimeout(() => copyBtn.textContent = 'کپی کردن متن', 2000);
+            setTimeout(() => copyBtn.textContent = original, 2000);
         });
     </script>
 </body>
-
 </html>
