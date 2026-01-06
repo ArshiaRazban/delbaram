@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تولید متن رنگ، سن و ابعاد محصول</title>
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Tahoma', Arial, sans-serif;
@@ -67,7 +70,9 @@
             font-size: 0.9rem;
         }
 
-        .remove-btn:hover { background-color: #d32f2f; }
+        .remove-btn:hover {
+            background-color: #d32f2f;
+        }
 
         label {
             display: block;
@@ -97,15 +102,19 @@
             margin-bottom: 16px;
         }
 
-        .dimensions-row > div {
+        .dimensions-row>div {
             flex: 1;
         }
 
         @media (max-width: 480px) {
-            .dimensions-row { flex-direction: column; gap: 0; }
+            .dimensions-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
 
-        #addProductBtn, button[type="submit"] {
+        #addProductBtn,
+        button[type="submit"] {
             width: 100%;
             padding: 14px;
             border: none;
@@ -121,14 +130,18 @@
             color: white;
         }
 
-        #addProductBtn:hover { background-color: #1E88E5; }
+        #addProductBtn:hover {
+            background-color: #1E88E5;
+        }
 
         button[type="submit"] {
             background-color: #4CAF50;
             color: white;
         }
 
-        button[type="submit"]:hover { background-color: #45a049; }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
 
         #output {
             margin-top: 24px;
@@ -156,18 +169,21 @@
             font-size: 1rem;
         }
 
-        .copy-btn:hover { background-color: #e68900; }
+        .copy-btn:hover {
+            background-color: #e68900;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>تولید متن رنگ، سن و ابعاد محصول</h1>
-        
+
         <form id="inputForm">
             <div id="productsContainer"></div>
-            
+
             <button type="button" id="addProductBtn">+ اضافه کردن رنگ و سن جدید</button>
-            
+
             <button type="submit">تولید متن نهایی</button>
         </form>
 
@@ -180,7 +196,7 @@
         const output = document.getElementById('output');
         const copyBtn = document.getElementById('copyBtn');
         const addProductBtn = document.getElementById('addProductBtn');
-        
+
         let productCount = 0;
 
         function addProduct() {
@@ -188,7 +204,7 @@
             const div = document.createElement('div');
             div.className = 'product';
             div.id = `product-${productCount}`;
-            
+
             div.innerHTML = `
                 <div class="product-header">
                     <h3>رنگ و سن ${productCount}</h3>
@@ -223,7 +239,7 @@
 
         addProductBtn.addEventListener('click', addProduct);
 
-        document.getElementById('inputForm').addEventListener('submit', function(e) {
+        document.getElementById('inputForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
             let text = '';
@@ -248,7 +264,6 @@
 
             // جمله پایانی بدون ایموجی
             if (text) {
-                text += `لطفاً رنگ و سایز مورد نظر خود را اعلام کنید تا موجودی را بررسی کنیم.`;
                 output.textContent = text.trim();
                 copyBtn.style.display = 'block';
             } else {
@@ -264,4 +279,5 @@
         });
     </script>
 </body>
+
 </html>
